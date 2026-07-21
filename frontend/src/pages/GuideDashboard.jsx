@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import api from '../api';
-import ProjectCard from '../components/ProjectCard.jsx';
-import ProjectDetail from '../components/ProjectDetail.jsx';
-import GuideDashboardCharts from '../components/GuideDashboardCharts.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
+import React, { useState, useEffect } from "react";
+import api from "../api";
+import ProjectCard from "../components/ProjectCard.jsx";
+import ProjectDetail from "../components/ProjectDetail.jsx";
+import GuideDashboardCharts from "../components/GuideDashboardCharts.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import {
   PieChart,
   Pie,
@@ -17,8 +17,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
-} from 'recharts';
+  ResponsiveContainer,
+} from "recharts";
 
 export default function GuideDashboard() {
   const { user } = useAuth();
@@ -32,11 +32,13 @@ export default function GuideDashboard() {
   const fetch = () => {
     setLoading(true);
     setAnalyticsLoading(true);
-    
+
     Promise.all([
-      api.get('/projects/tagged').then((r) => setTagged(r.data)),
-      api.get('/projects').then((r) => setAccepted(r.data)),
-      api.get(`/guide/dashboard/${user._id}/analytics`).then((r) => setAnalyticsData(r.data))
+      api.get("/projects/tagged").then((r) => setTagged(r.data)),
+      api.get("/projects").then((r) => setAccepted(r.data)),
+      api
+        .get(`/guide/dashboard/${user._id}/analytics`)
+        .then((r) => setAnalyticsData(r.data)),
     ]).finally(() => {
       setLoading(false);
       setAnalyticsLoading(false);
@@ -51,16 +53,20 @@ export default function GuideDashboard() {
 
   const handleApproveMilestone = async (projectId, milestoneId, status) => {
     try {
-      await api.put(`/projects/${projectId}/milestones/${milestoneId}`, { status });
+      await api.put(`/projects/${projectId}/milestones/${milestoneId}`, {
+        status,
+      });
       fetch(); // Refresh data
     } catch (error) {
-      console.error('Failed to update milestone:', error);
+      console.error("Failed to update milestone:", error);
     }
   };
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-white mb-8">Guide Dashboard</h1>
+      <h1 className="font-display text-2xl font-bold text-white mb-8">
+        Guide Dashboard
+      </h1>
 
       {/* Charts Section */}
       <GuideDashboardCharts guideId={user._id} loading={loading} />
@@ -75,10 +81,17 @@ export default function GuideDashboard() {
           {/* Pending approval */}
           {tagged.length > 0 && (
             <section className="mb-8">
-              <h2 className="text-lg font-semibold text-amber-400 mb-4">Pending approval ({tagged.length})</h2>
+              <h2 className="text-lg font-semibold text-amber-400 mb-4">
+                Pending approval ({tagged.length})
+              </h2>
               <div className="grid gap-4">
                 {tagged.map((p) => (
-                  <ProjectCard key={p._id} project={p} onView={() => setSelectedProject(p._id)} role="guide" />
+                  <ProjectCard
+                    key={p._id}
+                    project={p}
+                    onView={() => setSelectedProject(p._id)}
+                    role="guide"
+                  />
                 ))}
               </div>
             </section>
@@ -86,7 +99,9 @@ export default function GuideDashboard() {
 
           {/* Accepted projects */}
           <section>
-            <h2 className="text-lg font-semibold text-white mb-4">My accepted projects</h2>
+            <h2 className="text-lg font-semibold text-white mb-4">
+              My accepted projects
+            </h2>
             {accepted.length === 0 ? (
               <div className="bg-slate-900/50 border border-slate-700 rounded-xl p-8 text-center text-slate-400">
                 No accepted projects yet. Accept requests from the list above.
@@ -94,7 +109,12 @@ export default function GuideDashboard() {
             ) : (
               <div className="grid gap-4">
                 {accepted.map((p) => (
-                  <ProjectCard key={p._id} project={p} onView={() => setSelectedProject(p._id)} role="guide" />
+                  <ProjectCard
+                    key={p._id}
+                    project={p}
+                    onView={() => setSelectedProject(p._id)}
+                    role="guide"
+                  />
                 ))}
               </div>
             )}

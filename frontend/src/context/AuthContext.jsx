@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../api';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import api from "../api";
 
 const AuthContext = createContext(null);
 
@@ -8,27 +8,28 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
       setLoading(false);
       return;
     }
-    api.get('/auth/me')
+    api
+      .get("/auth/me")
       .then((res) => setUser(res.data.user))
       .catch(() => {
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
         setUser(null);
       })
       .finally(() => setLoading(false));
   }, []);
 
   const login = (userData, token) => {
-    localStorage.setItem('token', token);
+    localStorage.setItem("token", token);
     setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setUser(null);
   };
 
@@ -41,6 +42,6 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
   return ctx;
 }
