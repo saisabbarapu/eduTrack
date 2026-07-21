@@ -1,13 +1,7 @@
 {
   "folders": [
     {
-      "path": "frontend"
-    },
-    {
-      "path": "backend"
-    },
-    {
-      "path": "ml-service"
+      "path": "."
     }
   ],
   "settings": {}
