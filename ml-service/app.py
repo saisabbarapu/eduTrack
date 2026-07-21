@@ -1,37 +1,28 @@
-"""
-ML Service entry: reads JSON from stdin, dispatches to correct module, writes JSON to stdout.
-Node spawns this script and communicates via stdin/stdout.
-"""
-import sys
-import json
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import Dict, Any
 
-def main():
-    try:
-        line = sys.stdin.readline()
-        if not line:
-            sys.exit(1)
-        req = json.loads(line.strip())
-        task = req.get('type', '')
-        data = req.get('data', {})
+from delay_predict import predict_delay
+from duplicate_detect import check_duplicate
+from performance_risk import performance_risk
 
-        if task == 'delay':
-            from delay_predict import predict_delay
-            out = predict_delay(data)
-        elif task == 'duplicate':
-            from duplicate_detect import check_duplicate
-            out = check_duplicate(data)
-        elif task == 'performance':
-            from performance_risk import performance_risk
-            out = performance_risk(data)
-        else:
-            out = {'error': 'Unknown type: ' + task}
+app = FastAPI(title="EduTrack ML Service")
 
-        print(json.dumps(out))
-        sys.stdout.flush()
-    except Exception as e:
-        print(json.dumps({'error': str(e)}))
-        sys.stdout.flush()
-        sys.exit(1)
+class MLRequest(BaseModel):
+    data: Dict[str, Any]
 
-if __name__ == '__main__':
-    main()
+@app.post("/delay")
+def delay_endpoint(req: MLRequest):
+    return predict_delay(req.data)
+
+@app.post("/duplicate")
+def duplicate_endpoint(req: MLRequest):
+    return check_duplicate(req.data)
+
+@app.post("/performance")
+def performance_endpoint(req: MLRequest):
+    return performance_risk(req.data)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
