@@ -44,7 +44,20 @@ app.use("/api/student", studentRoutes);
 app.use("/api/guide", guideRoutes);
 app.use("/api/admin", adminRoutes);
 
-app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+app.get("/", (req, res) =>
+  res.json({
+    status: "ok",
+    message: "eduTrack Backend API is live and running",
+    endpoints: {
+      health: "/api/health",
+      auth: "/api/auth",
+      projects: "/api/projects",
+      ml: "/api/ml",
+    },
+  }),
+);
+app.get("/health", (req, res) => res.json({ status: "ok", time: new Date() }));
+app.get("/api/health", (req, res) => res.json({ status: "ok", time: new Date() }));
 
 if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
