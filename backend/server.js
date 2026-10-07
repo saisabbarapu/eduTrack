@@ -26,12 +26,17 @@ app.use(
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+const { autoSeedIfEmpty } = require("./seeds/autoSeed");
+
 // MongoDB
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/", {
     dbName: "edutrack",
   })
-  .then(() => console.log("MongoDB connected"))
+  .then(async () => {
+    console.log("MongoDB connected");
+    await autoSeedIfEmpty();
+  })
   .catch((err) => console.error("MongoDB error:", err));
 
 // Routes
@@ -50,6 +55,7 @@ app.get("/", (req, res) =>
     message: "eduTrack Backend API is live and running",
     endpoints: {
       health: "/api/health",
+      seed: "/api/seed",
       auth: "/api/auth",
       projects: "/api/projects",
       ml: "/api/ml",
@@ -58,6 +64,14 @@ app.get("/", (req, res) =>
 );
 app.get("/health", (req, res) => res.json({ status: "ok", time: new Date() }));
 app.get("/api/health", (req, res) => res.json({ status: "ok", time: new Date() }));
+app.get("/api/seed", async (req, res) => {
+  const result = await autoSeedIfEmpty();
+  res.json(result);
+});
+app.get("/seed", async (req, res) => {
+  const result = await autoSeedIfEmpty();
+  res.json(result);
+});
 
 if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
