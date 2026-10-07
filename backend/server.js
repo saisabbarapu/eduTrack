@@ -39,15 +39,30 @@ mongoose
   })
   .catch((err) => console.error("MongoDB error:", err));
 
-// Routes
+// Routes (mounted on both /api/* and /* for full compatibility)
 app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
+
 app.use("/api/users", userRoutes);
+app.use("/users", userRoutes);
+
 app.use("/api/projects", projectRoutes);
+app.use("/projects", projectRoutes);
+
 app.use("/api/reviews", reviewRoutes);
+app.use("/reviews", reviewRoutes);
+
 app.use("/api/ml", mlRoutes);
+app.use("/ml", mlRoutes);
+
 app.use("/api/student", studentRoutes);
+app.use("/student", studentRoutes);
+
 app.use("/api/guide", guideRoutes);
+app.use("/guide", guideRoutes);
+
 app.use("/api/admin", adminRoutes);
+app.use("/admin", adminRoutes);
 
 app.get("/", (req, res) =>
   res.json({
