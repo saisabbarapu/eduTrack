@@ -2,33 +2,18 @@ import React, { useState, useEffect } from "react";
 import api from "../api";
 import AdminDashboardCharts from "../components/AdminDashboardCharts.jsx";
 import {
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-} from "recharts";
-
-const COLORS = ["#22c55e", "#eab308", "#ef4444", "#6366f1"];
+  ShieldCheck,
+  Users,
+  Award,
+  FolderGit2,
+  AlertTriangle,
+  Sparkles,
+} from "lucide-react";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
-  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,19 +33,13 @@ export default function AdminDashboard() {
         }),
       );
 
-    console.log("Fetching admin analytics...");
     api
       .get("/admin/analytics")
       .then((res) => {
-        console.log("Admin analytics response:", res.data);
-        console.log("Response status:", res.status);
-        console.log("Response data type:", typeof res.data);
         setAnalyticsData(res.data);
       })
       .catch((error) => {
         console.error("Admin analytics error:", error);
-        console.error("Error response:", error.response?.data);
-        console.error("Error status:", error.response?.status);
         setAnalyticsData({
           totalStudents: 0,
           totalGuides: 0,
@@ -76,392 +55,145 @@ export default function AdminDashboard() {
 
     api
       .get("/projects")
-      .then((res) => setProjects(res.data))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
   if (loading || !stats) {
     return (
-      <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary-500" />
+      <div className="flex justify-center py-16">
+        <div className="w-8 h-8 border-2 border-emerald-400/40 border-t-emerald-300 rounded-full animate-spin" />
       </div>
     );
   }
 
-  const pieData = [
-    { name: "Accepted", value: stats.accepted || 0 },
-    { name: "Pending", value: stats.pending || 0 },
-    { name: "Rejected", value: stats.rejected || 0 },
-  ].filter((d) => d.value > 0);
-
-  const riskData = [
-    { name: "Low", value: stats.riskCounts?.low || 0, fill: "#22c55e" },
-    { name: "Medium", value: stats.riskCounts?.medium || 0, fill: "#eab308" },
-    { name: "High", value: stats.riskCounts?.high || 0, fill: "#ef4444" },
-  ].filter((d) => d.value > 0);
-
-  // Prepare analytics data
-  const monthlyProjectsData = analyticsData?.projectsPerMonth
-    ? Object.entries(analyticsData.projectsPerMonth).map(([month, count]) => ({
-        month,
-        count,
-      }))
-    : [];
-
-  const departmentProjectsData = analyticsData?.departmentWise
-    ? Object.entries(analyticsData.departmentWise).map(([dept, count]) => ({
-        department: dept,
-        count,
-      }))
-    : [];
-
-  const statusDistributionData = analyticsData?.statusDistribution
-    ? Object.entries(analyticsData.statusDistribution).map(
-        ([status, count]) => ({ status, count }),
-      )
-    : [];
-
-  const riskLevelsData = analyticsData?.riskLevels
-    ? Object.entries(analyticsData.riskLevels).map(([risk, count]) => ({
-        risk,
-        count,
-        fullMark: Math.max(...Object.values(analyticsData.riskLevels)) || 100,
-      }))
-    : [];
-
-  const deptData = (stats.deptWise || []).map((d) => ({
-    name: d._id || "N/A",
-    count: d.count,
-  }));
-  const guideData = (stats.guideWise || []).map((d) => ({
-    name: d.guide?.name || "Unknown",
-    count: d.count,
-  }));
-
-  const trendData = [...(projects || [])]
-    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-    .reduce((acc, p, i) => {
-      const month = new Date(p.createdAt).toLocaleDateString("en-US", {
-        month: "short",
-        year: "2-digit",
-      });
-      const last = acc[acc.length - 1];
-      if (last && last.month === month) last.count += 1;
-      else
-        acc.push({
-          month,
-          count: (acc.length ? acc[acc.length - 1].count : 0) + 1,
-        });
-      return acc;
-    }, []);
-
   return (
-    <div className="space-y-8">
-      <h1 className="font-display text-2xl font-bold text-white">
-        Admin Dashboard - College Analytics
-      </h1>
+    <div className="space-y-6">
+      {/* Admin Glossy Header */}
+      <div className="glossy-panel rounded-3xl p-7 border border-white/[0.15] shadow-glossy-md relative overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/[0.18] text-emerald-300 text-xs font-semibold shadow-glossy-sm">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Institutional Admin Command
+            </div>
+            <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-sm">
+              Institutional Intelligence & <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300">Governance</span>
+            </h1>
+            <p className="text-slate-300 text-xs max-w-xl drop-shadow-xs">
+              Cross-department project metrics, ML milestone delay alerts, faculty mentorship quotas, and student completion trends.
+            </p>
+          </div>
 
-      {/* Charts Section */}
+          <div className="glossy-card rounded-2xl px-6 py-3 border border-white/[0.12] shadow-glossy-sm text-center">
+            <span className="text-[10px] text-slate-300 block font-semibold uppercase tracking-wider">Total System Projects</span>
+            <span className="text-2xl font-extrabold text-white drop-shadow-xs">{analyticsData?.totalProjects || stats.total}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="glossy-card rounded-3xl p-5 border border-white/[0.12] shadow-glossy-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-slate-300 text-[10px] font-semibold uppercase tracking-wider">Projects</span>
+            <FolderGit2 className="w-4 h-4 text-cyan-300" />
+          </div>
+          <p className="text-2xl font-extrabold text-white">
+            {analyticsData?.totalProjects || stats.total}
+          </p>
+        </div>
+
+        <div className="glossy-card rounded-3xl p-5 border border-white/[0.12] shadow-glossy-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-slate-300 text-[10px] font-semibold uppercase tracking-wider">Students</span>
+            <Users className="w-4 h-4 text-blue-300" />
+          </div>
+          <p className="text-2xl font-extrabold text-blue-300">
+            {analyticsData?.totalStudents || 0}
+          </p>
+        </div>
+
+        <div className="glossy-card rounded-3xl p-5 border border-white/[0.12] shadow-glossy-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-slate-300 text-[10px] font-semibold uppercase tracking-wider">Guides</span>
+            <Award className="w-4 h-4 text-purple-300" />
+          </div>
+          <p className="text-2xl font-extrabold text-purple-300">
+            {analyticsData?.totalGuides || 0}
+          </p>
+        </div>
+
+        <div className="glossy-card rounded-3xl p-5 border border-white/[0.12] shadow-glossy-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-slate-300 text-[10px] font-semibold uppercase tracking-wider">Approved</span>
+            <ShieldCheck className="w-4 h-4 text-emerald-300" />
+          </div>
+          <p className="text-2xl font-extrabold text-emerald-300">
+            {analyticsData?.statusDistribution?.Approved || stats.accepted || 0}
+          </p>
+        </div>
+
+        <div className="glossy-card rounded-3xl p-5 border border-white/[0.12] shadow-glossy-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-slate-300 text-[10px] font-semibold uppercase tracking-wider">ML Reports</span>
+            <AlertTriangle className="w-4 h-4 text-amber-300" />
+          </div>
+          <p className="text-2xl font-extrabold text-amber-300">
+            {analyticsData?.totalMLReports || stats.mlReports?.length || 0}
+          </p>
+        </div>
+      </div>
+
+      {/* Analytics Charts Section */}
       <AdminDashboardCharts
         analyticsData={analyticsData}
         loading={analyticsLoading}
       />
 
-      {/* Original Stats Section */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-5">
-          <p className="text-slate-400 text-sm">Total Projects</p>
-          <p className="text-2xl font-bold text-white mt-1">
-            {analyticsData?.totalProjects || stats.total}
-          </p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-5">
-          <p className="text-slate-400 text-sm">Total Students</p>
-          <p className="text-2xl font-bold text-blue-400 mt-1">
-            {analyticsData?.totalStudents || 0}
-          </p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-5">
-          <p className="text-slate-400 text-sm">Total Guides</p>
-          <p className="text-2xl font-bold text-green-400 mt-1">
-            {analyticsData?.totalGuides || 0}
-          </p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-5">
-          <p className="text-slate-400 text-sm">Completed</p>
-          <p className="text-2xl font-bold text-emerald-400 mt-1">
-            {analyticsData?.statusDistribution?.Approved || stats.accepted}
-          </p>
-        </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-5">
-          <p className="text-slate-400 text-sm">Avg Progress</p>
-          <p className="text-2xl font-bold text-purple-400 mt-1">{0}%</p>
-        </div>
-      </div>
-
-      {/* Analytics Charts Section */}
-      {analyticsLoading ? (
-        <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary-500" />
-        </div>
-      ) : analyticsData ? (
-        <div className="space-y-6">
-          {/* First Row: Monthly Projects & Department Distribution */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Line Chart: Total projects created per month */}
-            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">
-                📈 Projects Created Per Month
-              </h2>
-              {monthlyProjectsData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={monthlyProjectsData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#1f2937",
-                        border: "1px solid #374151",
-                      }}
-                      labelStyle={{ color: "#f3f4f6" }}
-                    />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="count"
-                      stroke="#3b82f6"
-                      strokeWidth={3}
-                      dot={{ fill: "#3b82f6", r: 5 }}
-                      name="Projects Created"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <p className="text-slate-500 text-center py-8">
-                  No project creation data available
-                </p>
-              )}
-            </div>
-
-            {/* Bar Chart: Department-wise projects count */}
-            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">
-                🏢 Department-wise Projects
-              </h2>
-              {departmentProjectsData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={departmentProjectsData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis
-                      dataKey="department"
-                      stroke="#9ca3af"
-                      fontSize={12}
-                    />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#1f2937",
-                        border: "1px solid #374151",
-                      }}
-                      labelStyle={{ color: "#f3f4f6" }}
-                    />
-                    <Legend />
-                    <Bar
-                      dataKey="count"
-                      fill="#10b981"
-                      name="Number of Projects"
-                      radius={[8, 8, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <p className="text-slate-500 text-center py-8">
-                  No department data available
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Second Row: Status Distribution & Risk Levels */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Doughnut Chart: Status distribution */}
-            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">
-                📊 Project Status Distribution
-              </h2>
-              {statusDistributionData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie
-                      data={statusDistributionData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={90}
-                      paddingAngle={5}
-                      dataKey="count"
-                    >
-                      {statusDistributionData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#1f2937",
-                        border: "1px solid #374151",
-                      }}
-                      labelStyle={{ color: "#f3f4f6" }}
-                    />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <p className="text-slate-500 text-center py-8">
-                  No status data available
-                </p>
-              )}
-            </div>
-
-            {/* Radar Chart: Performance Risk Level */}
-            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">
-                🎯 Performance Risk Levels (ML Prediction)
-              </h2>
-              {riskLevelsData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
-                  <RadarChart data={riskLevelsData}>
-                    <PolarGrid stroke="#374151" />
-                    <PolarAngleAxis dataKey="risk" stroke="#9ca3af" />
-                    <PolarRadiusAxis stroke="#9ca3af" />
-                    <Radar
-                      name="Risk Distribution"
-                      dataKey="count"
-                      stroke="#ef4444"
-                      fill="#ef4444"
-                      fillOpacity={0.6}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#1f2937",
-                        border: "1px solid #374151",
-                      }}
-                      labelStyle={{ color: "#f3f4f6" }}
-                    />
-                    <Legend />
-                  </RadarChart>
-                </ResponsiveContainer>
-              ) : (
-                <p className="text-slate-500 text-center py-8">
-                  No risk analysis data available
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-12 text-center text-slate-400">
-          Failed to load analytics data.
-        </div>
-      )}
-
-      {/* Legacy Charts Section */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">
-            Department-wise projects (Legacy)
-          </h2>
-          {deptData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={deptData}>
-                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
-                <YAxis stroke="#94a3b8" fontSize={12} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#1e293b",
-                    border: "1px solid #475569",
-                  }}
-                />
-                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p className="text-slate-500 text-center py-8">
-              No departments yet
-            </p>
-          )}
-        </div>
-
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">
-            Guide-wise projects
-          </h2>
-          {guideData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart
-                data={guideData}
-                layout="vertical"
-                margin={{ left: 60 }}
-              >
-                <XAxis type="number" stroke="#94a3b8" fontSize={12} />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  stroke="#94a3b8"
-                  fontSize={12}
-                  width={80}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#1e293b",
-                    border: "1px solid #475569",
-                  }}
-                />
-                <Bar dataKey="count" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p className="text-slate-500 text-center py-8">
-              No guide assignments yet
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* ML Risk Alerts Table */}
+      {/* ML Delay Risk Alerts Table */}
       {stats.mlReports && stats.mlReports.length > 0 && (
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">
-            🚨 ML Risk Alerts
-          </h2>
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] space-y-4 shadow-glossy-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-amber-300">
+              <AlertTriangle className="w-4 h-4" />
+              <h2 className="font-display text-sm font-bold text-white uppercase tracking-wider drop-shadow-xs">
+                ML Milestone Risk & Delay Alerts
+              </h2>
+            </div>
+            <span className="text-xs text-slate-300">Top Flagged Projects</span>
+          </div>
+
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs text-left">
               <thead>
-                <tr className="text-slate-400 border-b border-slate-700">
-                  <th className="text-left py-2">Project</th>
-                  <th className="text-left py-2">Delay risk</th>
-                  <th className="text-left py-2">Performance risk</th>
+                <tr className="text-slate-300 border-b border-white/[0.1] uppercase font-semibold text-[10px]">
+                  <th className="py-3 px-3">Project Title</th>
+                  <th className="py-3 px-3">Delay Risk</th>
+                  <th className="py-3 px-3">Performance Level</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-white/[0.06]">
                 {stats.mlReports.slice(0, 10).map((r) => (
-                  <tr key={r._id} className="border-b border-slate-800">
-                    <td className="py-2 text-white">
+                  <tr key={r._id} className="hover:bg-white/[0.04] transition">
+                    <td className="py-3 px-3 text-white font-medium">
                       {r.projectId?.title || r.projectId}
                     </td>
-                    <td className="py-2">
+                    <td className="py-3 px-3">
                       <span
-                        className={`px-2 py-0.5 rounded text-xs ${r.delayRisk === "high" ? "bg-red-500/20 text-red-400" : r.delayRisk === "medium" ? "bg-amber-500/20 text-amber-400" : "bg-green-500/20 text-green-400"}`}
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase border backdrop-blur-md ${
+                          r.delayRisk === "high"
+                            ? "bg-rose-500/20 text-rose-300 border-rose-400/40 shadow-glossy-sm"
+                            : r.delayRisk === "medium"
+                              ? "bg-amber-500/20 text-amber-300 border-amber-400/40"
+                              : "bg-emerald-500/20 text-emerald-300 border-emerald-400/40"
+                        }`}
                       >
-                        {r.delayRisk || "N/A"}
+                        {r.delayRisk || "Low"}
                       </span>
                     </td>
-                    <td className="py-2 text-slate-300">
-                      {r.performanceRisk || "N/A"}
+                    <td className="py-3 px-3 text-slate-300">
+                      {r.performanceRisk || "On Track"}
                     </td>
                   </tr>
                 ))}

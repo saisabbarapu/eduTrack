@@ -79,8 +79,8 @@ const DelayPredictionChart = ({
       datasets: [
         {
           data: [percentage, 100 - percentage],
-          backgroundColor: [riskLevel.color, "#374151"],
-          borderColor: [riskLevel.borderColor, "#374151"],
+          backgroundColor: [riskLevel.color, "#1e293b"],
+          borderColor: [riskLevel.borderColor, "#1e293b"],
           borderWidth: 2,
           hoverOffset: 4,
         },
