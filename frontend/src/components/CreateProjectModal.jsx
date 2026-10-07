@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import DuplicateTopicDetectionChart from "./DuplicateTopicDetectionChart.jsx";
+import {
+  FolderPlus,
+  X,
+  UploadCloud,
+  Zap,
+} from "lucide-react";
 
 export default function CreateProjectModal({
   onClose,
@@ -28,7 +34,6 @@ export default function CreateProjectModal({
   const [duplicateData, setDuplicateData] = useState(null);
   const [showDuplicateChart, setShowDuplicateChart] = useState(false);
 
-  // Prefill if available, but student must confirm/edit manually
   useEffect(() => {
     if (!rollNumber) return;
     setForm((f) => ({
@@ -37,13 +42,11 @@ export default function CreateProjectModal({
     }));
   }, [rollNumber]);
 
-  // If guides load after modal opens, optionally auto-select first guide
   useEffect(() => {
     if (form.guideId) return;
     if (Array.isArray(guides) && guides.length > 0) {
       setForm((f) => ({ ...f, guideId: f.guideId || guides[0]._id }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guides]);
 
   const handleChange = (e) => {
@@ -71,218 +74,230 @@ export default function CreateProjectModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-slate-700 flex justify-between items-center">
-          <h2 className="font-display text-xl font-semibold text-white">
-            Create Project
-          </h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white">
-            ✕
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-lg overflow-y-auto">
+      <div className="glossy-panel rounded-3xl border border-white/[0.2] shadow-glossy-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative my-8">
+        {/* Modal Header */}
+        <div className="p-5 border-b border-white/[0.12] flex justify-between items-center sticky top-0 bg-[#0c1224]/95 backdrop-blur-2xl z-20">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-300 shadow-neon-glow">
+              <FolderPlus className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="font-display text-lg font-bold text-white tracking-tight drop-shadow-xs">
+                Submit Project Proposal
+              </h2>
+              <p className="text-slate-300 text-xs">
+                Fill in project scope, tech stack, and select your faculty guide
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer shadow-glossy-sm"
+          >
+            <X className="w-4 h-4" />
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* Duplicate Detection Chart */}
-          {showDuplicateChart && duplicateData && (
-            <div className="border border-slate-700 rounded-lg p-4">
-              <DuplicateTopicDetectionChart
-                duplicateData={duplicateData}
-                height={300}
-              />
-            </div>
-          )}
 
-          {/* Legacy Duplicate Message */}
-          {duplicateMessage && !showDuplicateChart && (
-            <div
-              className={`p-3 rounded-lg text-sm ${duplicateMessage.includes("similar") ? "bg-amber-500/10 text-amber-400" : "bg-green-500/10 text-green-400"}`}
-            >
-              {duplicateMessage}
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
               Project Title *
             </label>
             <input
               name="title"
               value={form.title}
               onChange={handleChange}
+              placeholder="e.g. Autonomous Real-time Drone Navigation with Edge AI"
               required
-              className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+              className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs"
             />
+            {duplicateMessage && (
+              <p className="text-[11px] text-amber-300 mt-1 flex items-center gap-1 font-medium">
+                <Zap className="w-3 h-3 text-amber-400" />
+                {duplicateMessage}
+              </p>
+            )}
           </div>
+
+          {/* Duplicate Topic Detection Chart */}
+          {showDuplicateChart && duplicateData && (
+            <div className="glossy-card rounded-2xl p-4 border border-white/[0.12]">
+              <DuplicateTopicDetectionChart
+                duplicateData={duplicateData}
+                title={form.title}
+              />
+            </div>
+          )}
+
+          {/* Abstract */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
-              Abstract / Description *
+            <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+              Abstract / Project Summary
             </label>
             <textarea
               name="abstract"
               value={form.abstract}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, abstract: e.target.value }))
-              }
+              onChange={handleChange}
               rows={3}
-              required
-              className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+              placeholder="Describe the research objective, methodology, and expected results..."
+              className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs resize-none"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          {/* Domain & Tech Stack */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
                 Domain
               </label>
               <select
                 name="domain"
                 value={form.domain}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+                className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs cursor-pointer"
               >
-                <option>Web</option>
-                <option>AI/ML</option>
-                <option>IoT</option>
-                <option>Mobile</option>
-                <option>Cloud</option>
-                <option>Other</option>
+                <option value="Web" className="bg-[#0c1020]">Web Development</option>
+                <option value="AI/ML" className="bg-[#0c1020]">Artificial Intelligence & ML</option>
+                <option value="IoT" className="bg-[#0c1020]">Internet of Things (IoT)</option>
+                <option value="Mobile" className="bg-[#0c1020]">Mobile App Development</option>
+                <option value="Cloud" className="bg-[#0c1020]">Cloud & DevOps</option>
+                <option value="Other" className="bg-[#0c1020]">Other</option>
               </select>
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
                 Tech Stack
               </label>
               <input
                 name="techStack"
                 value={form.techStack}
                 onChange={handleChange}
-                placeholder="React, Node, MongoDB"
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+                placeholder="e.g. React, Node.js, Python, TensorFlow"
+                className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs"
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          {/* Student Roll Number & Tag Guide */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Roll Number
+              <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+                Student Roll Number *
               </label>
               <input
                 name="studentRollNumber"
                 value={form.studentRollNumber}
                 onChange={handleChange}
-                placeholder="e.g. CSE23MCA001"
+                placeholder="e.g. MCA2026-001"
                 required
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+                className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs"
               />
-              <p className="text-xs text-slate-500 mt-1">
-                Enter your college roll number for verification.
-              </p>
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Tag Guide *
+              <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+                Tag Faculty Guide *
               </label>
               <select
                 name="guideId"
                 value={form.guideId}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+                className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs cursor-pointer"
               >
-                <option value="">Select guide</option>
-                {(guides || []).map((g) => (
-                  <option key={g._id} value={g._id}>
-                    {g.name} ({g.department}) — {g.email}
+                <option value="" className="bg-[#0c1020]">Select Faculty Guide</option>
+                {guides.map((g) => (
+                  <option key={g._id} value={g._id} className="bg-[#0c1020]">
+                    {g.name} ({g.department || "Faculty"})
                   </option>
                 ))}
               </select>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          {/* Department & Batch Year */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Start Date
-              </label>
-              <input
-                name="startDate"
-                type="date"
-                value={form.startDate}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Expected End Date
-              </label>
-              <input
-                name="expectedEndDate"
-                type="date"
-                value={form.expectedEndDate}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
                 Department
               </label>
               <input
                 name="department"
                 value={form.department}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+                placeholder="e.g. Computer Science"
+                className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
                 Batch Year
               </label>
               <input
                 name="batchYear"
                 value={form.batchYear}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+                placeholder="e.g. 2026"
+                className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs"
               />
             </div>
           </div>
+
+          {/* Team Members */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
-              Team Members (comma separated)
+            <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+              Team Members (Comma-separated)
             </label>
             <input
               name="teamMembers"
               value={form.teamMembers}
               onChange={handleChange}
-              placeholder="Name1, Name2"
-              className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 text-white"
+              placeholder="e.g. Alex Morgan, John Doe, Jane Smith"
+              className="w-full px-3.5 py-3 rounded-2xl glossy-input text-xs"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
-              Proposal PDF
+
+          {/* Proposal Document Upload */}
+          <div className="pt-2">
+            <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+              Attach SRS / Proposal PDF (Optional)
             </label>
-            <input
-              type="file"
-              accept=".pdf"
-              onChange={(e) => setProposalFile(e.target.files?.[0])}
-              className="w-full text-slate-400 text-sm"
-            />
+            <div className="border border-dashed border-white/[0.2] rounded-2xl p-5 text-center hover:border-cyan-400/60 hover:bg-white/[0.04] transition cursor-pointer shadow-glossy-sm backdrop-blur-md">
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={(e) => setProposalFile(e.target.files?.[0])}
+                className="hidden"
+                id="proposal-upload"
+              />
+              <label htmlFor="proposal-upload" className="cursor-pointer">
+                <UploadCloud className="w-7 h-7 text-cyan-300 mx-auto mb-1" />
+                <span className="text-xs text-slate-200 block font-semibold">
+                  {proposalFile ? proposalFile.name : "Click to select and upload SRS document"}
+                </span>
+                <span className="text-[10px] text-slate-400">PDF up to 10MB</span>
+              </label>
+            </div>
           </div>
-          <div className="flex justify-end gap-2 pt-4">
+
+          {/* Actions */}
+          <div className="pt-3 border-t border-white/[0.1] flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-slate-700 text-white"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/[0.08] transition cursor-pointer shadow-glossy-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-primary-600 text-white"
+              className="px-5 py-2.5 rounded-2xl glossy-btn-primary text-white text-xs font-bold shadow-neon-glow transition cursor-pointer"
             >
-              Create Project
+              Submit Project
             </button>
           </div>
         </form>

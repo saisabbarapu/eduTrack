@@ -32,14 +32,14 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary-500"></div>
+        <div className="w-8 h-8 border-2 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!analyticsData) {
     return (
-      <div className="text-center py-12 text-slate-400">
+      <div className="text-center py-12 text-slate-500 text-xs">
         No analytics data available
       </div>
     );
@@ -52,9 +52,9 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
       {
         data: Object.values(analyticsData.statusDistribution),
         backgroundColor: [
-          "#ef4444", // Not Started - Red
-          "#f59e0b", // In Progress - Yellow
-          "#10b981", // Completed - Green
+          "#ef4444", // Red
+          "#f59e0b", // Yellow
+          "#10b981", // Green
         ],
         borderWidth: 0,
       },
@@ -67,9 +67,9 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
       {
         label: "Progress Updates",
         data: Object.values(analyticsData.weeklyUpdates).slice(-8),
-        borderColor: "#3b82f6",
-        backgroundColor: "rgba(59, 130, 246, 0.1)",
-        tension: 0.4,
+        borderColor: "#06b6d4",
+        backgroundColor: "rgba(6, 182, 212, 0.1)",
+        tension: 0.3,
         fill: true,
       },
     ],
@@ -81,9 +81,9 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
       {
         label: "Review Score",
         data: analyticsData.reviewScores.map((r) => r.score),
-        backgroundColor: "#8b5cf6",
-        borderColor: "#7c3aed",
-        borderWidth: 2,
+        backgroundColor: "#10b981",
+        borderColor: "#059669",
+        borderRadius: 6,
       },
     ],
   };
@@ -95,21 +95,22 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
       legend: {
         position: "bottom",
         labels: {
-          color: "#e2e8f0",
-          padding: 20,
+          color: "#94a3b8",
+          font: { size: 11 },
+          padding: 16,
         },
       },
     },
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
       {/* Project Status Distribution - Doughnut Chart */}
-      <div className="bg-slate-900/50 border border-slate-700 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
-          Project Status Distribution
+      <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+          Detailed Status Distribution
         </h3>
-        <div className="h-64">
+        <div className="h-60">
           <Doughnut
             data={statusData}
             options={{
@@ -117,6 +118,11 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
               plugins: {
                 ...chartOptions.plugins,
                 tooltip: {
+                  backgroundColor: "#0c1020",
+                  titleColor: "#f8fafc",
+                  bodyColor: "#cbd5e1",
+                  borderColor: "rgba(255, 255, 255, 0.15)",
+                  borderWidth: 1,
                   callbacks: {
                     label: function (context) {
                       const label = context.label || "";
@@ -134,55 +140,27 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
             }}
           />
         </div>
-        <div className="mt-4 flex justify-center space-x-6 text-sm">
-          {Object.entries(analyticsData.statusDistribution).map(
-            ([status, count]) => (
-              <div key={status} className="flex items-center">
-                <div
-                  className={`w-3 h-3 rounded-full mr-2 ${
-                    status === "Not Started"
-                      ? "bg-red-500"
-                      : status === "In Progress"
-                        ? "bg-yellow-500"
-                        : "bg-green-500"
-                  }`}
-                ></div>
-                <span className="text-slate-300">
-                  {status}: {count}
-                </span>
-              </div>
-            ),
-          )}
-        </div>
       </div>
 
-      {/* Weekly Progress Updates - Line Chart */}
-      <div className="bg-slate-900/50 border border-slate-700 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
-          Weekly Progress Updates
+      {/* Weekly Progress - Line Chart */}
+      <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+          Weekly Progress Trajectory
         </h3>
-        <div className="h-64">
+        <div className="h-60">
           <Line
             data={weeklyData}
             options={{
               ...chartOptions,
               scales: {
                 x: {
-                  grid: {
-                    color: "#374151",
-                  },
-                  ticks: {
-                    color: "#9ca3af",
-                  },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
                 y: {
                   beginAtZero: true,
-                  grid: {
-                    color: "#374151",
-                  },
-                  ticks: {
-                    color: "#9ca3af",
-                  },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
               },
             }}
@@ -191,49 +169,29 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
       </div>
 
       {/* Review Scores - Bar Chart */}
-      <div className="bg-slate-900/50 border border-slate-700 rounded-xl p-6 lg:col-span-2">
-        <h3 className="text-lg font-semibold text-white mb-4">
-          Review Scores by Guide
+      <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm lg:col-span-2">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+          Faculty Milestone Review Performance
         </h3>
-        <div className="h-64">
+        <div className="h-60">
           <Bar
             data={reviewData}
             options={{
               ...chartOptions,
               scales: {
                 x: {
-                  grid: {
-                    color: "#374151",
-                  },
-                  ticks: {
-                    color: "#9ca3af",
-                  },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
                 y: {
                   beginAtZero: true,
                   max: 10,
-                  grid: {
-                    color: "#374151",
-                  },
-                  ticks: {
-                    color: "#9ca3af",
-                  },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
               },
             }}
           />
-        </div>
-        <div className="mt-4 text-sm text-slate-400">
-          Average Score:{" "}
-          {analyticsData.reviewScores.length > 0
-            ? (
-                analyticsData.reviewScores.reduce(
-                  (sum, r) => sum + r.score,
-                  0,
-                ) / analyticsData.reviewScores.length
-              ).toFixed(1)
-            : "N/A"}{" "}
-          / 10
         </div>
       </div>
     </div>

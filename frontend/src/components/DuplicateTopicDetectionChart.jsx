@@ -20,8 +20,7 @@ ChartJS.register(
   Legend,
 );
 
-const DuplicateTopicDetectionChart = ({ duplicateData, height = 300 }) => {
-  // Process data for chart
+const DuplicateTopicDetectionChart = ({ duplicateData, height = 260 }) => {
   const getRiskLevel = (similarity) => {
     if (similarity >= 80)
       return {
@@ -30,10 +29,10 @@ const DuplicateTopicDetectionChart = ({ duplicateData, height = 300 }) => {
         bgColor: "#ef444420",
       };
     if (similarity >= 60)
-      return { level: "Medium Risk", color: "#eab308", bgColor: "#eab30820" };
+      return { level: "Medium Risk", color: "#f59e0b", bgColor: "#f59e0b20" };
     if (similarity >= 40)
-      return { level: "Low Risk", color: "#3b82f6", bgColor: "#3b82f620" };
-    return { level: "Very Low Risk", color: "#22c55e", bgColor: "#22c55e20" };
+      return { level: "Low Risk", color: "#06b6d4", bgColor: "#06b6d420" };
+    return { level: "Unique Topic", color: "#10b981", bgColor: "#10b98120" };
   };
 
   if (
@@ -42,44 +41,37 @@ const DuplicateTopicDetectionChart = ({ duplicateData, height = 300 }) => {
     duplicateData.matches.length === 0
   ) {
     return (
-      <div className="flex items-center justify-center h-64 text-slate-500">
+      <div className="flex items-center justify-center h-48 text-slate-500">
         <div className="text-center">
-          <p className="mb-2">🔍</p>
-          <p>No similar topics found</p>
-          <p className="text-xs mt-1">Your topic appears to be unique</p>
+          <p className="text-xl mb-1">✨</p>
+          <p className="text-xs font-semibold text-slate-200">No duplicate topics detected</p>
+          <p className="text-[11px] text-slate-400 mt-0.5">Your project proposal appears to be completely original</p>
         </div>
       </div>
     );
   }
 
-  // Take top 5 most similar topics
   const topResults = duplicateData.matches.slice(0, 5);
 
-  // Prepare data for Chart.js
   const labels = topResults.map((match) => {
-    const title = match.title || match.existingTitle || "Unknown Topic";
-    return title.length > 30 ? title.substring(0, 30) + "..." : title;
+    const title = match.title || match.existingTitle || "Topic";
+    return title.length > 25 ? title.substring(0, 25) + "..." : title;
   });
 
-  const similarities = topResults.map(
-    (match) => match.similarity || match.score || 0,
-  );
-  const backgroundColors = topResults.map((match) => {
-    const similarity = match.similarity || match.score || 0;
-    return getRiskLevel(similarity).color;
+  const similarities = topResults.map((match) => {
+    return Math.round((match.similarityScore || match.similarity || 0) * 100);
   });
+
+  const colors = similarities.map((sim) => getRiskLevel(sim).color);
 
   const chartData = {
-    labels: labels,
+    labels,
     datasets: [
       {
-        label: "Similarity Score (%)",
+        label: "Similarity %",
         data: similarities,
-        backgroundColor: backgroundColors,
-        borderColor: backgroundColors,
-        borderWidth: 2,
+        backgroundColor: colors,
         borderRadius: 6,
-        barThickness: 40,
       },
     ],
   };
@@ -88,181 +80,50 @@ const DuplicateTopicDetectionChart = ({ duplicateData, height = 300 }) => {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
+      x: {
+        grid: { color: "#141c2e" },
+        ticks: { color: "#64748b", font: { size: 10 } },
+      },
       y: {
         beginAtZero: true,
         max: 100,
-        grid: {
-          color: "#374151",
-        },
-        ticks: {
-          color: "#9ca3af",
-          font: {
-            size: 12,
-          },
-          callback: function (value) {
-            return value + "%";
-          },
-        },
-        title: {
-          display: true,
-          text: "Similarity Score",
-          color: "#9ca3af",
-          font: {
-            size: 12,
-          },
-        },
-      },
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: "#9ca3af",
-          font: {
-            size: 11,
-          },
-          maxRotation: 45,
-          minRotation: 0,
-        },
+        grid: { color: "#141c2e" },
+        ticks: { color: "#64748b", font: { size: 10 } },
       },
     },
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { display: false },
       tooltip: {
-        backgroundColor: "#1f2937",
-        titleColor: "#f3f4f6",
-        bodyColor: "#d1d5db",
-        borderColor: "#374151",
+        backgroundColor: "#0b0f19",
+        titleColor: "#f8fafc",
+        bodyColor: "#94a3b8",
+        borderColor: "#1e293b",
         borderWidth: 1,
-        padding: 12,
-        callbacks: {
-          title: function (context) {
-            const dataIndex = context[0].dataIndex;
-            const match = topResults[dataIndex];
-            return match.title || match.existingTitle || "Unknown Topic";
-          },
-          label: function (context) {
-            const dataIndex = context.dataIndex;
-            const match = topResults[dataIndex];
-            const similarity = match.similarity || match.score || 0;
-            const risk = getRiskLevel(similarity);
-            return [
-              `Similarity: ${similarity}%`,
-              `Risk Level: ${risk.level}`,
-              `Student: ${match.studentName || "Unknown"}`,
-              `Department: ${match.department || "Unknown"}`,
-            ];
-          },
-          afterLabel: function (context) {
-            const dataIndex = context.dataIndex;
-            const match = topResults[dataIndex];
-            const abstract = match.abstract || match.existingAbstract || "";
-            if (abstract.length > 0) {
-              return [
-                "",
-                "📝 Abstract:",
-                abstract.length > 100
-                  ? abstract.substring(0, 100) + "..."
-                  : abstract,
-              ];
-            }
-            return [];
-          },
-        },
       },
-      title: {
-        display: false,
-      },
-    },
-    animation: {
-      duration: 1000,
-      easing: "easeInOutQuart",
     },
   };
 
-  // Calculate statistics
   const highestSimilarity = Math.max(...similarities);
-  const averageSimilarity =
-    similarities.reduce((sum, sim) => sum + sim, 0) / similarities.length;
   const highRiskCount = similarities.filter((sim) => sim >= 80).length;
 
   return (
-    <div className="w-full">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-white mb-2">
-          Duplicate Topic Detection Results
-        </h3>
-
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
-            <p className="text-slate-400 text-xs">Highest Similarity</p>
-            <p
-              className={`font-bold text-lg ${highestSimilarity >= 80 ? "text-red-400" : highestSimilarity >= 60 ? "text-yellow-400" : "text-green-400"}`}
-            >
-              {highestSimilarity.toFixed(1)}%
-            </p>
-          </div>
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
-            <p className="text-slate-400 text-xs">Average Similarity</p>
-            <p className="text-white font-bold text-lg">
-              {averageSimilarity.toFixed(1)}%
-            </p>
-          </div>
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
-            <p className="text-slate-400 text-xs">High Risk Topics</p>
-            <p
-              className={`font-bold text-lg ${highRiskCount > 0 ? "text-red-400" : "text-green-400"}`}
-            >
-              {highRiskCount}
-            </p>
-          </div>
-        </div>
+    <div className="w-full space-y-3">
+      <div className="flex items-center justify-between">
+        <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
+          ML Similarity Matches
+        </h4>
+        <span className="text-[11px] text-slate-400">
+          Max Match: <strong className={highestSimilarity >= 80 ? "text-rose-400" : "text-cyan-400"}>{highestSimilarity}%</strong>
+        </span>
       </div>
 
-      {/* Chart */}
-      <div style={{ height: height }}>
+      <div style={{ height }}>
         <Bar data={chartData} options={chartOptions} />
       </div>
 
-      {/* Risk Legend */}
-      <div className="mt-4 flex flex-wrap gap-4 text-xs">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-red-500 rounded"></div>
-          <span className="text-slate-400">High Risk (≥80%)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-          <span className="text-slate-400">Medium Risk (60-79%)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-blue-500 rounded"></div>
-          <span className="text-slate-400">Low Risk (40-59%)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-green-500 rounded"></div>
-          <span className="text-slate-400">Very Low Risk (&lt;40%)</span>
-        </div>
-      </div>
-
-      {/* High Risk Alert */}
       {highRiskCount > 0 && (
-        <div className="mt-4 bg-red-500/10 border border-red-500/30 rounded-lg p-4">
-          <div className="flex items-start gap-3">
-            <div className="text-red-400 text-lg">⚠️</div>
-            <div>
-              <p className="text-red-400 font-medium mb-1">
-                High Duplicate Risk Detected
-              </p>
-              <p className="text-slate-300 text-sm">
-                Found {highRiskCount} topic{highRiskCount > 1 ? "s" : ""} with
-                ≥80% similarity. Consider modifying your topic or abstract to
-                ensure originality.
-              </p>
-            </div>
-          </div>
+        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs">
+          <strong>Notice:</strong> High similarity with existing archived college projects. Consider adjusting scope or dataset.
         </div>
       )}
     </div>

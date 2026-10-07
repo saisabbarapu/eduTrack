@@ -2,10 +2,13 @@
   "name": "edutrack-frontend",
   "private": true,
   "version": "1.0.0",
+  "description": "Intelligent college project management and review portal",
+  "author": "Leela Sai Sabbarapu <leelasaisabbarapu22@gmail.com>",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "built": "vite build",
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint src",
@@ -14,6 +17,8 @@
   "dependencies": {
     "axios": "^1.6.2",
     "chart.js": "^4.5.1",
+    "lucide-react": "^1.52.0",
+    "ogl": "^1.0.11",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^18.2.0",

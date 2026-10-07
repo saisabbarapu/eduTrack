@@ -17,13 +17,20 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
+  cors({
+    origin: (origin, callback) => callback(null, true),
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/edutrack")
+  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/", {
+    dbName: "edutrack",
+  })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB error:", err));
 
@@ -37,6 +44,24 @@ app.use("/api/student", studentRoutes);
 app.use("/api/guide", guideRoutes);
 app.use("/api/admin", adminRoutes);
 
-app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+app.get("/", (req, res) =>
+  res.json({
+    status: "ok",
+    message: "eduTrack Backend API is live and running",
+    endpoints: {
+      health: "/api/health",
+      auth: "/api/auth",
+      projects: "/api/projects",
+      ml: "/api/ml",
+    },
+  }),
+);
+app.get("/health", (req, res) => res.json({ status: "ok", time: new Date() }));
+app.get("/api/health", (req, res) => res.json({ status: "ok", time: new Date() }));
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;
+

@@ -8,6 +8,23 @@ from performance_risk import performance_risk
 
 app = FastAPI(title="EduTrack ML Service")
 
+@app.get("/")
+def root_endpoint():
+    return {
+        "status": "ok",
+        "service": "EduTrack ML Microservice",
+        "endpoints": {
+            "docs": "/docs",
+            "duplicate": "/duplicate",
+            "delay": "/delay",
+            "performance": "/performance"
+        }
+    }
+
+@app.get("/health")
+def health_endpoint():
+    return {"status": "ok"}
+
 class MLRequest(BaseModel):
     data: Dict[str, Any]
 

@@ -2,6 +2,20 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 import { useAuth } from "../context/AuthContext.jsx";
+import Strands from "../components/Strands.jsx";
+import {
+  GraduationCap,
+  Award,
+  ShieldCheck,
+  User,
+  Mail,
+  Lock,
+  Hash,
+  Building,
+  Calendar,
+  ArrowRight,
+  Zap,
+} from "lucide-react";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -22,6 +36,10 @@ export default function Register() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleRoleSelect = (role) => {
+    setForm((f) => ({ ...f, role }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -39,145 +57,269 @@ export default function Register() {
     }
   };
 
+  const roles = [
+    {
+      id: "student",
+      title: "Student",
+      desc: "Projects & Reviews",
+      icon: GraduationCap,
+      color: "border-cyan-400/40 text-cyan-300 bg-cyan-500/15 shadow-neon-glow",
+      activeBg: "border-cyan-400 bg-cyan-500/25 shadow-neon-glow scale-102",
+    },
+    {
+      id: "guide",
+      title: "Faculty",
+      desc: "Evaluate & Mentor",
+      icon: Award,
+      color: "border-purple-400/40 text-purple-300 bg-purple-500/15 shadow-neon-purple",
+      activeBg: "border-purple-400 bg-purple-500/25 shadow-neon-purple scale-102",
+    },
+    {
+      id: "admin",
+      title: "Admin",
+      desc: "College Analytics",
+      icon: ShieldCheck,
+      color: "border-emerald-400/40 text-emerald-300 bg-emerald-500/15 shadow-neon-emerald",
+      activeBg: "border-emerald-400 bg-emerald-500/25 shadow-neon-emerald scale-102",
+    },
+  ];
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900/20 px-4 py-8">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-3 mb-4">
-            <img
-              src="/projecticon.png"
-              alt="EduTrack"
-              className="h-12 w-12 rounded-lg"
-            />
-            <h1 className="font-display text-4xl font-bold text-white tracking-tight">
-              EduTrack
-            </h1>
+    <div className="min-h-screen bg-[#070913] flex items-center justify-center px-4 py-12 relative overflow-hidden selection:bg-cyan-400 selection:text-black">
+      {/* Animated WebGL Strands Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <Strands
+          colors={["#f97316", "#8b5cf6", "#06b6d4"]}
+          count={3}
+          speed={0.35}
+          amplitude={0.9}
+          waviness={1.1}
+          thickness={0.65}
+          glow={2.2}
+          taper={2.8}
+          spread={1}
+          intensity={0.42}
+          saturation={1.8}
+          opacity={0.65}
+          scale={1.4}
+          glass={false}
+          refraction={1}
+          dispersion={1}
+          glassSize={1}
+          hueShift={0}
+        />
+        {/* Ambient Dark Diffusion Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#070913]/40 via-[#070913]/65 to-[#070913]/90" />
+      </div>
+
+      <div className="w-full max-w-xl mx-auto space-y-6 relative z-10">
+        {/* Brand Header */}
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 text-white p-0.5 shadow-neon-glow mb-2">
+            <div className="w-full h-full bg-[#080d1a]/85 backdrop-blur-md rounded-[14px] flex items-center justify-center">
+              <Zap className="h-6 w-6 text-cyan-300" />
+            </div>
           </div>
-          <p className="text-slate-400">Create your account</p>
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight drop-shadow-sm">
+            Create your <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300">eduTrack</span> Account
+          </h1>
+          <p className="text-slate-300 text-xs">
+            Select your institutional role and setup your workspace
+          </p>
         </div>
-        <div className="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-8 shadow-xl">
+
+        {/* Glossy Glass Form Card */}
+        <div className="glossy-panel rounded-3xl p-8 shadow-glossy-lg border border-white/[0.15]">
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-500/10 text-red-400 text-sm">
-              {error}
+            <div className="mb-5 p-3 rounded-2xl bg-rose-500/15 backdrop-blur-md border border-rose-500/40 text-rose-200 text-xs font-medium flex items-center gap-2 shadow-glossy-sm">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-rose-400" />
+              <span>{error}</span>
             </div>
           )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Interactive Role Switcher Cards */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Name
+              <label className="block text-xs font-semibold text-slate-200 mb-2 uppercase tracking-wider">
+                Select Your Role
               </label>
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-600 text-white focus:ring-2 focus:ring-primary-500"
-              />
+              <div className="grid grid-cols-3 gap-3">
+                {roles.map((r) => {
+                  const Icon = r.icon;
+                  const isSelected = form.role === r.id;
+                  return (
+                    <div
+                      key={r.id}
+                      onClick={() => handleRoleSelect(r.id)}
+                      className={`cursor-pointer rounded-2xl p-3 text-center border transition-all duration-200 backdrop-blur-md flex flex-col items-center justify-center gap-1.5 ${
+                        isSelected
+                          ? r.activeBg
+                          : "border-white/[0.1] bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 shadow-glossy-sm"
+                      }`}
+                    >
+                      <div
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center border ${r.color}`}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <span className="text-xs font-bold text-white">
+                        {r.title}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Email
-              </label>
-              <input
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-600 text-white focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Password
-              </label>
-              <input
-                name="password"
-                type="password"
-                value={form.password}
-                onChange={handleChange}
-                required
-                minLength={6}
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-600 text-white focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
-                Role
-              </label>
-              <select
-                name="role"
-                value={form.role}
-                onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-600 text-white focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="student">Student</option>
-                <option value="guide">Guide</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-            {(form.role === "student" || form.role === "guide") && (
-              <>
-                {form.role === "student" && (
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
-                      Roll Number
-                    </label>
-                    <input
-                      name="rollNumber"
-                      value={form.rollNumber}
-                      onChange={handleChange}
-                      placeholder="e.g. CSE23MCA001"
-                      required
-                      className="w-full px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-600 text-white focus:ring-2 focus:ring-primary-500"
-                    />
-                  </div>
-                )}
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">
-                    Department
-                  </label>
+
+            {/* Basic Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" />
                   <input
-                    name="department"
-                    value={form.department}
+                    name="name"
+                    value={form.name}
                     onChange={handleChange}
-                    placeholder="e.g. CSE"
-                    className="w-full px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-600 text-white focus:ring-2 focus:ring-primary-500"
+                    placeholder="Alex Morgan"
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-2xl glossy-input text-xs"
                   />
                 </div>
-                {form.role === "student" && (
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+                  Institutional Email
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" />
+                  <input
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="alex@college.edu"
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-2xl glossy-input text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" />
+                <input
+                  name="password"
+                  type="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Minimum 6 characters"
+                  required
+                  minLength={6}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl glossy-input text-xs"
+                />
+              </div>
+            </div>
+
+            {/* Role Specific Details */}
+            {(form.role === "student" || form.role === "guide") && (
+              <div className="pt-3 border-t border-white/[0.1] space-y-3">
+                <span className="text-xs font-semibold text-cyan-300 block uppercase tracking-wider">
+                  Academic Configuration
+                </span>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  {form.role === "student" && (
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+                        Roll Number
+                      </label>
+                      <div className="relative">
+                        <Hash className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" />
+                        <input
+                          name="rollNumber"
+                          value={form.rollNumber}
+                          onChange={handleChange}
+                          placeholder="e.g. MCA2026-001"
+                          required
+                          className="w-full pl-10 pr-4 py-2.5 rounded-2xl glossy-input text-xs"
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
-                      Batch Year
+                    <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+                      Department
                     </label>
-                    <input
-                      name="batchYear"
-                      value={form.batchYear}
-                      onChange={handleChange}
-                      placeholder="e.g. 2023"
-                      className="w-full px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-600 text-white focus:ring-2 focus:ring-primary-500"
-                    />
+                    <div className="relative">
+                      <Building className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" />
+                      <input
+                        name="department"
+                        value={form.department}
+                        onChange={handleChange}
+                        placeholder="e.g. Computer Science"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-2xl glossy-input text-xs"
+                      />
+                    </div>
                   </div>
-                )}
-              </>
+
+                  {form.role === "student" && (
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-200 mb-1.5 uppercase tracking-wider">
+                        Batch Year
+                      </label>
+                      <div className="relative">
+                        <Calendar className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" />
+                        <input
+                          name="batchYear"
+                          value={form.batchYear}
+                          onChange={handleChange}
+                          placeholder="e.g. 2026"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-2xl glossy-input text-xs"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
+
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-lg bg-primary-600 hover:bg-primary-500 text-white font-medium transition disabled:opacity-50"
+              className="w-full py-3.5 px-4 rounded-2xl glossy-btn-primary text-white font-bold text-xs transition-all flex items-center justify-center gap-2 group disabled:opacity-50 cursor-pointer mt-3"
             >
-              {loading ? "Creating account..." : "Register"}
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  <span>Provisioning Account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Complete Registration</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
             </button>
           </form>
-          <p className="mt-6 text-center text-slate-400 text-sm">
+
+          <div className="mt-6 text-center text-xs text-slate-300">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-primary-400 hover:text-primary-300"
+              className="font-bold text-cyan-300 hover:text-cyan-200 underline underline-offset-4"
             >
               Sign in
             </Link>
-          </p>
+          </div>
         </div>
       </div>
     </div>

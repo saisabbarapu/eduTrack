@@ -6,10 +6,10 @@ const Review = require("../models/Review");
 const MlReport = require("../models/MlReport");
 
 const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/edutrack";
+  process.env.MONGODB_URI || "mongodb://localhost:27017/";
 
 async function seed() {
-  await mongoose.connect(MONGODB_URI);
+  await mongoose.connect(MONGODB_URI, { dbName: "edutrack" });
   await User.deleteMany({});
   await Project.deleteMany({});
   await Review.deleteMany({});
@@ -40,13 +40,13 @@ async function seed() {
   });
 
   const student1 = await User.create({
-    name: "Amit Singh",
-    email: "student1@edutrack.com",
+    name: "Leela Sai Sabbarapu",
+    email: "leelasaisabbarapu22@gmail.com",
     password: "student123",
     role: "student",
-    rollNumber: "CSE23MCA001",
-    department: "CSE",
-    batchYear: "2023",
+    rollNumber: "MCA2026-001",
+    department: "MCA",
+    batchYear: "2026",
   });
 
   const student2 = await User.create({
@@ -60,20 +60,20 @@ async function seed() {
   });
 
   const p1 = await Project.create({
-    title: "College Project Review Portal",
+    title: "ProjectHub – Full-Stack Project Showcase Platform",
     abstract:
-      "A web-based portal for managing and reviewing college projects with guide allocation and milestone tracking.",
+      "A MERN stack-based web application that enables students to upload, explore, and interact with academic projects.",
     domain: "Web",
-    techStack: "React, Node.js, MongoDB",
+    techStack: "React.js, Node.js, Express.js, MongoDB, Socket.io, JWT, Multer, Nodemailer",
     studentId: student1._id,
     guideId: guide1._id,
     guideStatus: "accepted",
     progressPercent: 60,
-    department: "CSE",
-    batchYear: "2023",
+    department: "MCA",
+    batchYear: "2026",
     startDate: new Date("2024-06-01"),
     expectedEndDate: new Date("2025-03-01"),
-    teamMembers: ["Amit Singh", "Rahul Verma"],
+    teamMembers: ["Leela Sai Sabbarapu"],
     milestones: [
       {
         name: "Phase 1: Topic selection + SRS",
@@ -103,38 +103,38 @@ async function seed() {
   });
 
   const p2 = await Project.create({
-    title: "Smart Attendance using Face Recognition",
+    title: "Mini Shopping Web App",
     abstract:
-      "IoT and ML based attendance system using face recognition for colleges.",
-    domain: "AI/ML",
-    techStack: "Python, OpenCV, TensorFlow",
+      "A web app using HTML, CSS, JS, and Bootstrap to display categorized product listings for men, women, and kids with basic filtering.",
+    domain: "Web Development",
+    techStack: "HTML, CSS, JavaScript, Bootstrap",
     studentId: student2._id,
     guideId: null,
     guideStatus: "pending",
     progressPercent: 20,
-    department: "CSE",
-    batchYear: "2023",
+    department: "MCA",
+    batchYear: "2026",
     startDate: new Date("2024-08-01"),
     expectedEndDate: new Date("2025-04-01"),
     teamMembers: ["Sneha Patel"],
     milestones: [
       {
-        name: "Phase 1: Topic selection + SRS",
+        name: "Phase 1: UI Design + Responsiveness",
         status: "approved",
         dueDate: new Date("2024-09-01"),
       },
       {
-        name: "Phase 2: UI/Backend development",
+        name: "Phase 2: Product Listings integration",
         status: "pending",
         dueDate: new Date("2024-12-01"),
       },
       {
-        name: "Phase 3: ML integration",
+        name: "Phase 3: Filtering logic",
         status: "pending",
         dueDate: new Date("2025-02-01"),
       },
       {
-        name: "Phase 4: Final report + Demo",
+        name: "Phase 4: Final deployment",
         status: "pending",
         dueDate: new Date("2025-04-01"),
       },
