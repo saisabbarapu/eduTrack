@@ -2,6 +2,8 @@
   "name": "edutrack-frontend",
   "private": true,
   "version": "1.0.0",
+  "description": "Intelligent college project management and review portal",
+  "author": "Leela Sai Sabbarapu <leelasaisabbarapu22@gmail.com>",
   "type": "module",
   "scripts": {
     "dev": "vite",

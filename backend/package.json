@@ -1,7 +1,8 @@
 {
   "name": "edutrack-backend",
   "version": "1.0.0",
-  "description": "EduTrack College Project Management Backend",
+  "description": "EduTrack - Intelligent college project management and review portal for end-to-end academic project lifecycle management",
+  "author": "Leela Sai Sabbarapu <leelasaisabbarapu22@gmail.com>",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

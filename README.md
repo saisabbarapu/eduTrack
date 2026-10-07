@@ -69,7 +69,7 @@ Creates:
 
 - **Admin:** admin@edutrack.com / admin123  
 - **Guides:** guide1@edutrack.com, guide2@edutrack.com / guide123  
-- **Students:** student1@edutrack.com, student2@edutrack.com / student123  
+- **Students:** leelasaisabbarapu22@gmail.com, student2@edutrack.com / student123  
 - Sample projects and one review  
 
 ## Features
@@ -126,6 +126,13 @@ Creates:
 - **Performance risk:** missed milestones, failed reviews, low activity → risk level.
 
 Node calls `ml-service/app.py` with JSON on stdin and reads JSON from stdout.
+
+## Author
+
+**Leela Sai Sabbarapu**
+- Email: leelasaisabbarapu22@gmail.com
+- GitHub: [saisabbarapu](https://github.com/saisabbarapu)
+- Phone: 8897074233
 
 ## License
 
