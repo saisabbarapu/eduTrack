@@ -170,45 +170,45 @@ export default function GuideDashboardCharts({ guideId, loading }) {
     <div className="space-y-6">
       {/* Main Analytics Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div className="saas-card rounded-2xl p-5 border border-slate-800">
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
             Projects by Status
           </h3>
           <div className="h-60">
             <Bar data={statusData} options={{
               ...chartOptions,
               scales: {
-                x: { grid: { color: "#141c2e" }, ticks: { color: "#64748b", font: { size: 10 } } },
-                y: { grid: { color: "#141c2e" }, ticks: { color: "#64748b", font: { size: 10 } } }
+                x: { grid: { color: "rgba(255, 255, 255, 0.08)" }, ticks: { color: "#94a3b8", font: { size: 10 } } },
+                y: { grid: { color: "rgba(255, 255, 255, 0.08)" }, ticks: { color: "#94a3b8", font: { size: 10 } } }
               }
             }} />
           </div>
         </div>
 
-        <div className="saas-card rounded-2xl p-5 border border-slate-800">
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
             Weekly Student Submissions
           </h3>
           <div className="h-60">
             <Line data={weeklyData} options={{
               ...chartOptions,
               scales: {
-                x: { grid: { color: "#141c2e" }, ticks: { color: "#64748b", font: { size: 10 } } },
-                y: { grid: { color: "#141c2e" }, ticks: { color: "#64748b", font: { size: 10 } } }
+                x: { grid: { color: "rgba(255, 255, 255, 0.08)" }, ticks: { color: "#94a3b8", font: { size: 10 } } },
+                y: { grid: { color: "rgba(255, 255, 255, 0.08)" }, ticks: { color: "#94a3b8", font: { size: 10 } } }
               }
             }} />
           </div>
         </div>
 
-        <div className="saas-card rounded-2xl p-5 border border-slate-800">
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">Risk Levels</h3>
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Risk Levels</h3>
           <div className="h-60">
             <Doughnut data={riskData} options={chartOptions} />
           </div>
         </div>
 
-        <div className="saas-card rounded-2xl p-5 border border-slate-800">
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
             Department-wise Students
           </h3>
           <div className="h-60">
@@ -218,8 +218,8 @@ export default function GuideDashboardCharts({ guideId, loading }) {
       </div>
 
       {/* Review Workload Chart */}
-      <div className="saas-card rounded-2xl p-5 border border-slate-800">
-        <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+      <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
           Review Workload
         </h3>
         <div className="h-60">
@@ -230,14 +230,14 @@ export default function GuideDashboardCharts({ guideId, loading }) {
               scales: {
                 x: {
                   stacked: true,
-                  grid: { color: "#141c2e" },
-                  ticks: { color: "#64748b", font: { size: 10 } },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
                 y: {
                   stacked: true,
                   beginAtZero: true,
-                  grid: { color: "#141c2e" },
-                  ticks: { color: "#64748b", font: { size: 10 } },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
               },
             }}

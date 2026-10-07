@@ -106,8 +106,8 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
       {/* Project Status Distribution - Doughnut Chart */}
-      <div className="saas-card rounded-2xl p-5 border border-slate-800">
-        <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+      <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
           Detailed Status Distribution
         </h3>
         <div className="h-60">
@@ -118,10 +118,10 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
               plugins: {
                 ...chartOptions.plugins,
                 tooltip: {
-                  backgroundColor: "#0b0f19",
+                  backgroundColor: "#0c1020",
                   titleColor: "#f8fafc",
-                  bodyColor: "#94a3b8",
-                  borderColor: "#1e293b",
+                  bodyColor: "#cbd5e1",
+                  borderColor: "rgba(255, 255, 255, 0.15)",
                   borderWidth: 1,
                   callbacks: {
                     label: function (context) {
@@ -143,8 +143,8 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
       </div>
 
       {/* Weekly Progress - Line Chart */}
-      <div className="saas-card rounded-2xl p-5 border border-slate-800">
-        <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+      <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
           Weekly Progress Trajectory
         </h3>
         <div className="h-60">
@@ -154,13 +154,13 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
               ...chartOptions,
               scales: {
                 x: {
-                  grid: { color: "#141c2e" },
-                  ticks: { color: "#64748b", font: { size: 10 } },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
                 y: {
                   beginAtZero: true,
-                  grid: { color: "#141c2e" },
-                  ticks: { color: "#64748b", font: { size: 10 } },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
               },
             }}
@@ -169,8 +169,8 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
       </div>
 
       {/* Review Scores - Bar Chart */}
-      <div className="saas-card rounded-2xl p-5 border border-slate-800 lg:col-span-2">
-        <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+      <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm lg:col-span-2">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
           Faculty Milestone Review Performance
         </h3>
         <div className="h-60">
@@ -180,14 +180,14 @@ export default function StudentDashboardCharts({ analyticsData, loading }) {
               ...chartOptions,
               scales: {
                 x: {
-                  grid: { color: "#141c2e" },
-                  ticks: { color: "#64748b", font: { size: 10 } },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
                 y: {
                   beginAtZero: true,
                   max: 10,
-                  grid: { color: "#141c2e" },
-                  ticks: { color: "#64748b", font: { size: 10 } },
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
                 },
               },
             }}

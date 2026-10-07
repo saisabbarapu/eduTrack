@@ -149,8 +149,8 @@ export default function AdminDashboardCharts({ analyticsData, loading }) {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Projects Per Month - Line Chart */}
-        <div className="saas-card rounded-2xl p-5 border border-slate-800">
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
             Projects Created Per Month
           </h3>
           <div className="h-60">
@@ -160,13 +160,13 @@ export default function AdminDashboardCharts({ analyticsData, loading }) {
                 ...chartOptions,
                 scales: {
                   x: {
-                    grid: { color: "#141c2e" },
-                    ticks: { color: "#64748b", font: { size: 10 } },
+                    grid: { color: "rgba(255, 255, 255, 0.08)" },
+                    ticks: { color: "#94a3b8", font: { size: 10 } },
                   },
                   y: {
                     beginAtZero: true,
-                    grid: { color: "#141c2e" },
-                    ticks: { color: "#64748b", font: { size: 10 } },
+                    grid: { color: "rgba(255, 255, 255, 0.08)" },
+                    ticks: { color: "#94a3b8", font: { size: 10 } },
                   },
                 },
               }}
@@ -175,8 +175,8 @@ export default function AdminDashboardCharts({ analyticsData, loading }) {
         </div>
 
         {/* Department-wise Projects - Bar Chart */}
-        <div className="saas-card rounded-2xl p-5 border border-slate-800">
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
             Department-wise Allocations
           </h3>
           <div className="h-60">
@@ -186,13 +186,13 @@ export default function AdminDashboardCharts({ analyticsData, loading }) {
                 ...chartOptions,
                 scales: {
                   x: {
-                    grid: { color: "#141c2e" },
-                    ticks: { color: "#64748b", font: { size: 10 } },
+                    grid: { color: "rgba(255, 255, 255, 0.08)" },
+                    ticks: { color: "#94a3b8", font: { size: 10 } },
                   },
                   y: {
                     beginAtZero: true,
-                    grid: { color: "#141c2e" },
-                    ticks: { color: "#64748b", font: { size: 10 } },
+                    grid: { color: "rgba(255, 255, 255, 0.08)" },
+                    ticks: { color: "#94a3b8", font: { size: 10 } },
                   },
                 },
               }}
@@ -201,8 +201,8 @@ export default function AdminDashboardCharts({ analyticsData, loading }) {
         </div>
 
         {/* Project Status Distribution - Doughnut Chart */}
-        <div className="saas-card rounded-2xl p-5 border border-slate-800">
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
             Status Breakdown
           </h3>
           <div className="h-60">
@@ -213,6 +213,11 @@ export default function AdminDashboardCharts({ analyticsData, loading }) {
                 plugins: {
                   ...chartOptions.plugins,
                   tooltip: {
+                    backgroundColor: "#0c1020",
+                    titleColor: "#f8fafc",
+                    bodyColor: "#cbd5e1",
+                    borderColor: "rgba(255, 255, 255, 0.15)",
+                    borderWidth: 1,
                     callbacks: {
                       label: function (context) {
                         const label = context.label || "";
@@ -233,8 +238,8 @@ export default function AdminDashboardCharts({ analyticsData, loading }) {
         </div>
 
         {/* Risk Level Distribution - Radar Chart */}
-        <div className="saas-card rounded-2xl p-5 border border-slate-800">
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">
+        <div className="glossy-card rounded-3xl p-6 border border-white/[0.12] shadow-glossy-sm">
+          <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
             Institutional Risk Profile
           </h3>
           <div className="h-60">
@@ -244,10 +249,10 @@ export default function AdminDashboardCharts({ analyticsData, loading }) {
                 ...chartOptions,
                 scales: {
                   r: {
-                    angleLines: { color: "#141c2e" },
-                    grid: { color: "#141c2e" },
-                    pointLabels: { color: "#94a3b8", font: { size: 10 } },
-                    ticks: { backdropColor: "transparent", color: "#64748b", font: { size: 9 } },
+                    angleLines: { color: "rgba(255, 255, 255, 0.08)" },
+                    grid: { color: "rgba(255, 255, 255, 0.08)" },
+                    pointLabels: { color: "#cbd5e1", font: { size: 10, weight: "bold" } },
+                    ticks: { backdropColor: "transparent", color: "#94a3b8", font: { size: 9 } },
                   },
                 },
               }}

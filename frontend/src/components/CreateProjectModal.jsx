@@ -74,10 +74,10 @@ export default function CreateProjectModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-lg overflow-y-auto">
       <div className="glossy-panel rounded-3xl border border-white/[0.2] shadow-glossy-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative my-8">
         {/* Modal Header */}
-        <div className="p-5 border-b border-white/[0.12] flex justify-between items-center sticky top-0 bg-[#080d1a]/90 backdrop-blur-2xl z-20">
+        <div className="p-5 border-b border-white/[0.12] flex justify-between items-center sticky top-0 bg-[#0c1224]/95 backdrop-blur-2xl z-20">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-300 shadow-neon-glow">
               <FolderPlus className="w-5 h-5" />

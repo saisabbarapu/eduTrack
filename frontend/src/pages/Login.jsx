@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 import { useAuth } from "../context/AuthContext.jsx";
+import Strands from "../components/Strands.jsx";
 import {
   Mail,
   Lock,
@@ -57,11 +58,30 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-[#070913] flex items-center justify-center px-4 py-12 relative overflow-hidden selection:bg-cyan-400 selection:text-black">
-      {/* Glossy Ambient Glow Orbs */}
-      <div className="glossy-bg">
-        <div className="orb-1" />
-        <div className="orb-2" />
-        <div className="orb-3" />
+      {/* Animated WebGL Strands Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <Strands
+          colors={["#f97316", "#8b5cf6", "#06b6d4"]}
+          count={3}
+          speed={0.35}
+          amplitude={0.9}
+          waviness={1.1}
+          thickness={0.65}
+          glow={2.2}
+          taper={2.8}
+          spread={1}
+          intensity={0.42}
+          saturation={1.8}
+          opacity={0.65}
+          scale={1.4}
+          glass={false}
+          refraction={1}
+          dispersion={1}
+          glassSize={1}
+          hueShift={0}
+        />
+        {/* Ambient Dark Diffusion Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#070913]/40 via-[#070913]/65 to-[#070913]/90" />
       </div>
 
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">

@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import Strands from "./Strands.jsx";
 import {
   GraduationCap,
   LogOut,
@@ -55,15 +56,34 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-[#070913] text-slate-100 flex flex-col relative selection:bg-cyan-400 selection:text-black">
-      {/* Glossy Ambient Light Orbs */}
-      <div className="glossy-bg">
-        <div className="orb-1" />
-        <div className="orb-2" />
-        <div className="orb-3" />
+      {/* Dynamic Animated WebGL Strands Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <Strands
+          colors={["#f97316", "#8b5cf6", "#06b6d4"]}
+          count={3}
+          speed={0.35}
+          amplitude={0.9}
+          waviness={1.1}
+          thickness={0.65}
+          glow={2.2}
+          taper={2.8}
+          spread={1}
+          intensity={0.42}
+          saturation={1.8}
+          opacity={0.65}
+          scale={1.4}
+          glass={false}
+          refraction={1}
+          dispersion={1}
+          glassSize={1}
+          hueShift={0}
+        />
+        {/* Ambient Dark Diffusion Vignette for Seamless Text Contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#070913]/40 via-[#070913]/65 to-[#070913]/90" />
       </div>
 
       {/* Top Glossy Frosted Glass Navbar */}
-      <nav className="sticky top-0 z-40 bg-white/[0.04] backdrop-blur-2xl border-b border-white/[0.12] shadow-glossy-sm">
+      <nav className="sticky top-0 z-40 bg-[#0a0f1e]/80 backdrop-blur-2xl border-b border-white/[0.12] shadow-glossy-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Brand Logo & Main Nav */}
