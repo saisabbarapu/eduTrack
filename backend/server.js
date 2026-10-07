@@ -28,7 +28,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/edutrack")
+  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/", {
+    dbName: "edutrack",
+  })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB error:", err));
 

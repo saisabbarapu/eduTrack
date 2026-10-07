@@ -6,10 +6,10 @@ const Review = require("../models/Review");
 const MlReport = require("../models/MlReport");
 
 const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/edutrack";
+  process.env.MONGODB_URI || "mongodb://localhost:27017/";
 
 async function seed() {
-  await mongoose.connect(MONGODB_URI);
+  await mongoose.connect(MONGODB_URI, { dbName: "edutrack" });
   await User.deleteMany({});
   await Project.deleteMany({});
   await Review.deleteMany({});
