@@ -26,18 +26,33 @@ app.use(
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+const connectDB = require("./config/db");
 const { autoSeedIfEmpty } = require("./seeds/autoSeed");
 
-// MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/", {
-    dbName: "edutrack",
+// Initialize MongoDB Connection (reused across serverless/instance cold-starts)
+connectDB()
+  .then(() => {
+    // Run seed check asynchronously in background without blocking incoming login requests
+    setTimeout(() => {
+      autoSeedIfEmpty().catch((err) => console.error("Background seed error:", err));
+    }, 100);
   })
-  .then(async () => {
-    console.log("MongoDB connected");
-    await autoSeedIfEmpty();
-  })
-  .catch((err) => console.error("MongoDB error:", err));
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// Database connection readiness middleware for serverless/cold-starts
+app.use(async (req, res, next) => {
+  // Allow health checks to respond instantly without waiting for DB
+  if (req.path === "/health" || req.path === "/api/health" || req.path === "/") {
+    return next();
+  }
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("Database error on request:", err);
+    res.status(503).json({ error: "Database unavailable. Please retry in a moment." });
+  }
+});
 
 // Routes (mounted on both /api/* and /* for full compatibility)
 app.use("/api/auth", authRoutes);

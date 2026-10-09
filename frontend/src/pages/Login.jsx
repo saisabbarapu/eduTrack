@@ -23,23 +23,40 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [serverWaking, setServerWaking] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  // Background Pre-warm: Sends lightweight ping to wake up deployed backend (e.g. Render/Vercel) on page load
+  React.useEffect(() => {
+    api.get("/health").catch(() => {});
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+    setServerWaking(false);
+
+    // If server takes longer than 2.5s, inform user that deployed backend is spinning up
+    const wakeTimer = setTimeout(() => {
+      setServerWaking(true);
+    }, 2500);
+
     try {
       const { data } = await api.post("/auth/login", { email, password });
+      clearTimeout(wakeTimer);
       login(data.user, data.token);
       if (data.user.role === "student") navigate("/student");
       else if (data.user.role === "guide") navigate("/guide");
       else navigate("/admin");
     } catch (err) {
+      clearTimeout(wakeTimer);
       setError(err.response?.data?.error || "Invalid email or password");
     } finally {
+      clearTimeout(wakeTimer);
       setLoading(false);
+      setServerWaking(false);
     }
   };
 
@@ -197,7 +214,7 @@ export default function Login() {
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                    <span>Signing in...</span>
+                    <span>{serverWaking ? "Waking up cloud server..." : "Signing in..."}</span>
                   </>
                 ) : (
                   <>
