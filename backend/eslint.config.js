@@ -12,6 +12,11 @@ module.exports = [
         require: "readonly",
         module: "readonly",
         console: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
+        Buffer: "readonly",
         describe: "readonly",
         it: "readonly",
         expect: "readonly",
@@ -21,6 +26,8 @@ module.exports = [
     },
     rules: {
       "no-unused-vars": "warn",
+      "no-prototype-builtins": "warn",
+      "no-useless-assignment": "warn",
     },
   },
 ];
